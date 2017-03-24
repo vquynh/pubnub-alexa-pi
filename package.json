@@ -1,0 +1,16 @@
+{
+  "name": "pubnub-alexa",
+  "version": "1.0.0",
+  "description": "Voice controlled home automation with Alexa and Pubnub",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  "dotenv": "^4.0.0",
+  "pubnub": "^4.4.4"
+  },
+  "author": "Gopal",
+  "license": "ISC"
+}
