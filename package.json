@@ -9,7 +9,8 @@
   },
   "dependencies": {
   "dotenv": "^4.0.0",
-  "pubnub": "^4.4.4"
+  "pubnub": "^4.4.4",
+  "bonescript": "^0.6.1"
   },
   "author": "Gopal",
   "license": "ISC"
