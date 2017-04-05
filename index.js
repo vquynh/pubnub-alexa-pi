@@ -3,10 +3,17 @@ var PubNub = require('pubnub'); // Use the Pubnub SDK
 var pins = require('bonescript'); // Required for GPIO switching
 
 //LEDs connected to these GPIO pins
-HALL_LIGHT = "P8_13"
-KITCHEN_LIGHT = "P8_15"
+GARAGE_LIGHT = "P8_13"
+DRAWING_ROOM_LIGHT = "P8_15"
 BEDROOM_LIGHT = "P8_17"
-var leds = [HALL_LIGHT, KITCHEN_LIGHT, BEDROOM_LIGHT];
+
+//Servo motor 
+GARAGE_DOOR = "P9_21"
+// Typical servo motor operating at 50Hz
+SERVO_FREQ_HZ = 50  // Servo frequency (20 ms)
+
+var leds = [DRAWING_ROOM_LIGHT, GARAGE_LIGHT, BEDROOM_LIGHT];
+var doors = [GARAGE_DOOR];	//We can add more servo motors later to control different doors
 
 try
 {
@@ -20,7 +27,21 @@ try
 	for (var i in leds){
 		pins.digitalWrite(leds[i], state);
 	}
+
+    	//Set the pin as analog output to use PWM for servo motor
+	for (var i in doors)
+    	{
+		pins.pinMode(doors[i],pins.ANALOG_OUTPUT, 6, 0, 0, doInterval);	
+    	}
+
+    	function doInterval(x) {
+    	if(x.err) {
+        	console.log('x.err = ' + x.err);
+        	return;
+    	}
+	}
 }
+
 catch (err)
 {
 	console.log ("Exception occured while setting up GPIO ", err);
@@ -50,17 +71,17 @@ try
 				
 			if (cmd === 'TURN_ON')
 			{
-				if (device.includes("hall light"))
+				if (device.includes("drawing room light"))
 				{
 					console.log (msg['message'] + ' ' + device);
-					gpio_pin = HALL_LIGHT;
+					gpio_pin = DRAWING_ROOM_LIGHT;
 					pin_value = pins.HIGH;
 					pins.digitalWrite(gpio_pin, pin_value);
 				}
-				else if (device.includes("kitchen light"))
+				else if (device.includes("garage light"))
 				{
 					console.log (msg['message'] + ' ' + device);
-					gpio_pin = KITCHEN_LIGHT;
+					gpio_pin = GARAGE_LIGHT;
 					pin_value = pins.HIGH;
 					pins.digitalWrite(gpio_pin, pin_value);
 				}
@@ -78,17 +99,17 @@ try
 			}
 			else if (cmd === 'TURN_OFF')
 			{
-				if (device.includes("hall light"))
+				if (device.includes("drawing room light"))
 				{
 					console.log (msg['message'] + ' ' + device);
-					gpio_pin = HALL_LIGHT;
+					gpio_pin = DRAWING_ROOM_LIGHT;
 					pin_value = pins.LOW;
 					pins.digitalWrite(gpio_pin, pin_value);
 				}
-				else if (device.includes("kitchen light"))
+				else if (device.includes("garage light"))
 				{
 					console.log (msg['message'] + ' ' + device);
-					gpio_pin = KITCHEN_LIGHT;
+					gpio_pin = GARAGE_LIGHT;
 					pin_value = pins.LOW;
 					pins.digitalWrite(gpio_pin, pin_value);
 				}
@@ -104,7 +125,35 @@ try
 					console.log ("Invalid device:  " + device);
 				}								
 			}
-			else if (cmd === 'SET_VALUE') // TODO: process set value command
+			else if (cmd === 'OPEN_DOOR')
+			{
+				if (device.includes("garage door"))
+				{
+					console.log (msg['message'] + ' ' + device);
+					move (0.8);
+					
+					
+				}
+				else
+				{
+					console.log ("Invalid device:  " + device);
+				}								
+			}
+			else if (cmd === 'CLOSE_DOOR')
+			{
+				if (device.includes("garage door"))
+				{
+					console.log (msg['message'] + ' ' + device);
+					move (2.5);
+					
+					
+				}
+				else
+				{
+					console.log ("Invalid device:  " + device);
+				}								
+			}
+		    else if (cmd === 'SET_VALUE') // TODO: process set value command
 			{
 				console.log ("Recd setting value command");
 				console.log ("Not handled setting value");
@@ -127,4 +176,10 @@ try
 catch (err)
 {
 	console.log ('Exception occured processing Pubnub ', err);
+}
+
+function move(pos) {
+    var dutyCycle = pos/1000*SERVO_FREQ_HZ;
+    pins.analogWrite(GARAGE_DOOR, dutyCycle, SERVO_FREQ_HZ);
+    console.log('pos = ' + pos + ' duty cycle = ' + dutyCycle);
 }
