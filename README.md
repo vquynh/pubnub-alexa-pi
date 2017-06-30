@@ -1,4 +1,4 @@
-# Home automation demo on BeagleBone Black using Alexa and PubNub
+# Home automation demo on Raspberry using Alexa and PubNub
 This project conatins node js code to run on beaglebone black for subscribing to Pubnub channel. This is part of the code supporting my blog post  **Voice controlled home automation using Alexa and PubNub**
 
 Steps to follow:
@@ -30,7 +30,6 @@ node index.js
 Subscribing to channel alexa_world
 ```
 * Start testing with the alexa app and you should see messages on your console
-* If you connect LEDs on GPIOs (8_13, 8_15 and 8_17), you should see then turn on/off in response to voice commands spoken into the alexa app.
-* GPIO P9_21 is used for PWM output to control a typical servo motor operating at 50Hz.
+* If you connect LEDs on GPIOs (1_11, 1_13 and 1_15), you should see then turn on/off in response to voice commands spoken into the alexa app.
 
-For details, refer to my blog post on https://abszeroblog.wordpress.com/
+For more details on the original project from Gopal Amlekar on how to automate your home with voice using alexa, beagleboard, pubnub and raspberry pi, refer to the author's blog post on https://abszeroblog.wordpress.com/
